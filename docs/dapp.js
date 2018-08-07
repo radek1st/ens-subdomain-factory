@@ -4,10 +4,10 @@ DApp = {
     emptyAddress: '0x0000000000000000000000000000000000000000',
     
     // Local Truffle/Ganache
-    factoryAddress: "0x9fbda871d559710256a2502a2517b794b482db40",
+    //factoryAddress: "0x9fbda871d559710256a2502a2517b794b482db40",
 
     // Mainnet
-    //factoryAddress: "",
+    factoryAddress: "0x21aa8d3eee8be2333ed180e9a5a8c0729c9b652c",
 
     init: function() {
         console.log('[x] Initializing DApp.');
