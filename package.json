@@ -1,0 +1,37 @@
+{
+  "name": "ens-subdomain-factory",
+  "author": "Radek Ostrowski https://startonchain.com",
+  "version": "1.0.0",
+  "description": "Ens and DApp example",
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  },
+  "requires": true,
+  "lockfileVersion": 1,
+  "dependencies": {
+    "eth-ens-namehash-ms": "^2.2.0",
+    "idna-uts46-hx": {
+      "integrity": "sha512-PWoF9Keq6laYdIRwwCdhTPl60xRqAloYNMQLiyUnG42VjT53oW07BXIRM+NK7eQjzXjAk2gUvX9caRxlnF9TAA==",
+      "requires": {
+        "punycode": "2.1.0"
+      },
+      "resolved": "https://registry.npmjs.org/idna-uts46-hx/-/idna-uts46-hx-2.3.1.tgz",
+      "version": "2.3.1"
+    },
+    "js-sha3": {
+      "integrity": "sha1-DU/9gALVMzqrr0oj7tL2N0yfKOc=",
+      "resolved": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.5.7.tgz",
+      "version": "0.5.7"
+    },
+    "punycode": {
+      "integrity": "sha1-X4Y+3Im5bbCQdLrXlHvwkFbKTn0=",
+      "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.1.0.tgz",
+      "version": "2.1.0"
+    },
+    "web3": "^1.0.0-beta.35"
+  }
+}
