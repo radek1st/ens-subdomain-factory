@@ -3,11 +3,14 @@ DApp = {
     factoryAbi: [{"constant":false,"inputs":[{"name":"_topLevelDomain","type":"string"},{"name":"_subDomain","type":"string"},{"name":"_owner","type":"address"},{"name":"_target","type":"address"}],"name":"newSubdomain","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"subdomain","type":"string"}],"name":"SubdomainCreated","type":"event"},{"constant":true,"inputs":[{"name":"_subDomain","type":"string"},{"name":"_topLevelDomain","type":"string"}],"name":"subDomainOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}],
     emptyAddress: '0x0000000000000000000000000000000000000000',
     
-    // Local Truffle/Ganache
+    // Local
     //factoryAddress: "0x9fbda871d559710256a2502a2517b794b482db40",
 
+    // Ropsten
+    factoryAddress: "0xf9fa2ff44a474b6d20500969bda61c2827fbc6b6",
+
     // Mainnet
-    factoryAddress: "0x21aa8d3eee8be2333ed180e9a5a8c0729c9b652c",
+    //factoryAddress: "0x21aa8d3eee8be2333ed180e9a5a8c0729c9b652c",
 
     init: function() {
         console.log('[x] Initializing DApp.');
@@ -105,7 +108,7 @@ DApp = {
                 let fullDomain = $('#subdomain').val() + "." +
                 $('#domain option').filter(":selected").val() + ".eth";
 
-                $("a").attr("href", "https://etherscan.io/enslookup?q=" + fullDomain);
+                $("a").attr("href", "https://ropsten.etherscan.io/enslookup?q=" + fullDomain);
                 $('#confirmModal').modal('show');
 
                 $("#subdomain").removeClass("is-valid is-invalid");
@@ -129,8 +132,8 @@ DApp = {
         initFrontend: function(){
             $('#owner').val(DApp.currentAccount);
             $('#target').val(DApp.currentAccount);
+            $("#domain").append("<option value='tenz-id'>tenz-id.eth</option>");
             $("#domain").append("<option value='freedomain'>freedomain.eth</option>");
-            $("#domain").append("<option value='startonchain'>startonchain.eth</option>");
         },
 
         updateDomainAvailable: function(){
