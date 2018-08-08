@@ -52,6 +52,7 @@ DApp = {
     checkSubdomainOwner: function(subdomain, domain){
         DApp.factoryContract.methods.subDomainOwner(subdomain, domain).call()
         .then(addr => {
+            $("#subdomain").removeClass("is-valid is-invalid");
             if(addr === DApp.emptyAddress){
                 $('#valid').text("It's available! Go for it tiger!");
                 $('#subdomain').addClass('is-valid');
