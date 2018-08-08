@@ -129,8 +129,7 @@ DApp = {
         initFrontend: function(){
             $('#owner').val(DApp.currentAccount);
             $('#target').val(DApp.currentAccount);
-            $("#domain").append("<option value='freedomain'>freedomain.eth</option>");
-            $("#domain").append("<option value='startonchain'>startonchain.eth</option>");
+            $("#domain").append("<option value='digitizecoin'>freedomain.eth</option>");
         },
 
         updateDomainAvailable: function(){
