@@ -19,10 +19,10 @@ import './EnsResolver.sol';
  */
 contract EnsSubdomainFactory {
 	address public owner;
-    EnsRegistry public registry;
+	EnsRegistry public registry;
 	EnsResolver public resolver;
 	bool public locked;
-    bytes32 ethNameHash = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+	bytes32 ethNameHash = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
 
 	event SubdomainCreated(address indexed creator, address indexed owner, string subdomain, string domain);
 	event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -42,8 +42,8 @@ contract EnsSubdomainFactory {
 	 *
 	 */
 	modifier onlyOwner() {
-	  require(msg.sender == owner);
-	  _;
+		require(msg.sender == owner);
+		_;
 	}
 
 	/**
@@ -55,17 +55,17 @@ contract EnsSubdomainFactory {
 	 * @param _target - address that this new domain will resolve to
 	 */
 	function newSubdomain(string _subDomain, string _topLevelDomain, address _owner, address _target) public {
-	    //create namehash for the top domain
-	    bytes32 topLevelNamehash = keccak256(abi.encodePacked(ethNameHash, keccak256(abi.encodePacked(_topLevelDomain))));
-	    //make sure this contract owns the top level domain
-        require(registry.owner(topLevelNamehash) == address(this), "this contract should own top level domain");
-	    //create labelhash for the sub domain
-	    bytes32 subDomainLabelhash = keccak256(abi.encodePacked(_subDomain));
-	    //create namehash for the sub domain
-	    bytes32 subDomainNamehash = keccak256(abi.encodePacked(topLevelNamehash, subDomainLabelhash));
-        //make sure it is free or owned by the sender
-        require(registry.owner(subDomainNamehash) == address(0) ||
-        	registry.owner(subDomainNamehash) == msg.sender, "sub domain already owned");
+		//create namehash for the top domain
+		bytes32 topLevelNamehash = keccak256(abi.encodePacked(ethNameHash, keccak256(abi.encodePacked(_topLevelDomain))));
+		//make sure this contract owns the top level domain
+		require(registry.owner(topLevelNamehash) == address(this), "this contract should own top level domain");
+		//create labelhash for the sub domain
+		bytes32 subDomainLabelhash = keccak256(abi.encodePacked(_subDomain));
+		//create namehash for the sub domain
+		bytes32 subDomainNamehash = keccak256(abi.encodePacked(topLevelNamehash, subDomainLabelhash));
+		//make sure it is free or owned by the sender
+		require(registry.owner(subDomainNamehash) == address(0) ||
+			registry.owner(subDomainNamehash) == msg.sender, "sub domain already owned");
 		//create new subdomain, temporarily this smartcontract is the owner
 		registry.setSubnodeOwner(topLevelNamehash, subDomainLabelhash, address(this));
 		//set public resolver for this domain
