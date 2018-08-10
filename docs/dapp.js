@@ -18,14 +18,31 @@ DApp = {
     },
 
     initWeb3: function() {
-        if(typeof web3 !== 'undefined') {
-            web3 = new Web3(web3.currentProvider);
-            console.log('[x] web3 object initialized.');
-            DApp.initContracts(); 
-        } else {
-            //no web3 instance available show a popup
-            $('#metamaskModal').modal('show');
-        }
+        window.addEventListener('load', () => {
+            // If web3 is not injected
+            if (typeof web3 === 'undefined') {
+                // Listen for provider injection
+                window.addEventListener('message', ({ data }) => {
+                    console.log("data", data);
+                    if (data && data.type && data.type === 'ETHEREUM_PROVIDER_SUCCESS') {
+                        // Use injected provider
+                        console.log('[x] web3 object initialized.');
+                        web3 = new Web3(ethereum);
+                    } else {
+                        // No web3 instance available show a popup
+                        $('#metamaskModal').modal('show');   
+                    }
+                });
+                // Request provider
+                window.postMessage({ type: 'ETHEREUM_PROVIDER_REQUEST' }, '*');
+            }
+            // If web3 is injected use it's provider
+            else {
+                web3 = new Web3(web3.currentProvider);
+                console.log('[x] web3 object initialized.');
+                DApp.initContracts(); 
+            } 
+        });
     },
 
     initContracts: function() {
