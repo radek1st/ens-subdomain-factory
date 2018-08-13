@@ -33,9 +33,9 @@ contract('EnsSubdomainFactory', (accounts) => {
     }
 
     it("creating new subdomain works", async () => {
-        //first set the factory contract to be the owner of the top level domain
-        let topDomainNamehash = Namehash.hash(domainEth);
-        await registry.setOwner(topDomainNamehash, factory.address);
+        //first set the factory contract to be the owner of the domain
+        let domainNamehash = Namehash.hash(domainEth);
+        await registry.setOwner(domainNamehash, factory.address);
 
         let expectedNamehash = Namehash.hash(fullDomainEth);
         await factory.newSubdomain(subdomain, domain, subdomainOwner, subdomainTarget);
@@ -48,17 +48,17 @@ contract('EnsSubdomainFactory', (accounts) => {
         assert(subdomainTarget == (await resolver.targets.call(expectedNamehash)), "domain target invalid");
     });
 
-    it("creating new subdomain fails when factory is not the owner of top domain", async () => {
+    it("creating new subdomain fails when factory is not the owner of domain", async () => {
         try {
             await factory.newSubdomain(domain, subdomain, subdomainOwner, subdomainTarget);
             assert(false);
         } catch (e) {
-            expectRevert(e, "factory contract must be the owner of the top domain");
+            expectRevert(e, "factory contract must be the owner of the domain");
         }
     });
 
     it("updating subdomain works if done by current owner", async () => {
-        //first set the factory contract to be the owner of the top level domain
+        //first set the factory contract to be the owner of the  domain
         await registry.setOwner(Namehash.hash(domainEth), factory.address);
 
         let expectedNamehash = Namehash.hash(fullDomainEth);
@@ -77,7 +77,7 @@ contract('EnsSubdomainFactory', (accounts) => {
     });
 
     it("creating new subdomain fails if it is already owned by someone else", async () => {
-        //first set the factory contract to be the owner of the top level domain
+        //first set the factory contract to be the owner of the domain
         await registry.setOwner(Namehash.hash(domainEth), factory.address);
 
         //create it for the first time
@@ -92,7 +92,7 @@ contract('EnsSubdomainFactory', (accounts) => {
         }
     });
 
-    it("transferring top level domain works", async () => {
+    it("transferring domain works", async () => {
         let namehash = Namehash.hash(domainEth);
         
         await registry.setOwner(namehash, factory.address);
@@ -102,7 +102,7 @@ contract('EnsSubdomainFactory', (accounts) => {
         assert(subdomainOwner == (await registry.owner.call(namehash)));
     });
 
-    it("cannot transfer top level domains when locked", async () => {
+    it("cannot transfer domains when locked", async () => {
         let namehash = Namehash.hash(domainEth);
         
         await registry.setOwner(namehash, factory.address);
@@ -119,7 +119,7 @@ contract('EnsSubdomainFactory', (accounts) => {
         assert(factory.address == (await registry.owner.call(namehash)));
     });
 
-    it("cannot transfer top level domains when not contract owner", async () => {
+    it("cannot transfer domains when not contract owner", async () => {
         let namehash = Namehash.hash(domainEth);
         
         await registry.setOwner(namehash, factory.address);
@@ -128,7 +128,7 @@ contract('EnsSubdomainFactory', (accounts) => {
             await factory.transferTopLevelDomainOwnership(namehash, subdomainOwner, {from: subdomainOwner});
             assert(false);
         } catch (e) {
-            expectRevert(e, "cannot transfer top level domain if not contract owner");
+            expectRevert(e, "cannot transfer domain if not contract owner");
         }
         assert(factory.address == (await registry.owner.call(namehash)));
     });
