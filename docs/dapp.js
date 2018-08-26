@@ -77,7 +77,7 @@ DApp = {
 						$('#valid').text("It's available! Go for it tiger!");
 						$('#subdomain').addClass('is-valid');
 					} else if(addr === DApp.currentAccount) {
-						$('#valid').text("It's your domain! Edit away!");
+						$('#valid').text("It's your subdomain! Edit away!");
 						$('#subdomain').addClass('is-valid');
 					} else {
 						$('#invalid').text("Oops! It's already taken by: " + addr);
