@@ -1,6 +1,6 @@
 DApp = {
 	factoryContract: null,
-	factoryAbi: [{"constant":false,"inputs":[{"name":"_topLevelDomain","type":"string"},{"name":"_subDomain","type":"string"},{"name":"_owner","type":"address"},{"name":"_target","type":"address"}],"name":"newSubdomain","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"subdomain","type":"string"}],"name":"SubdomainCreated","type":"event"},{"constant":true,"inputs":[{"name":"_subDomain","type":"string"},{"name":"_topLevelDomain","type":"string"}],"name":"subDomainOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}],
+	factoryAbi: [{"constant":false,"inputs":[{"name":"_domain","type":"string"},{"name":"_subdomain","type":"string"},{"name":"_owner","type":"address"},{"name":"_target","type":"address"}],"name":"newSubdomain","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"subdomain","type":"string"}],"name":"SubdomainCreated","type":"event"},{"constant":true,"inputs":[{"name":"_subdomain","type":"string"},{"name":"_domain","type":"string"}],"name":"subdomainOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}],
 	emptyAddress: '0x0000000000000000000000000000000000000000',
 	
 	// Local
@@ -67,7 +67,7 @@ DApp = {
 	},
 
 	checkSubdomainOwner: function(subdomain, domain){
-		DApp.factoryContract.methods.subDomainOwner(subdomain, domain).call(
+		DApp.factoryContract.methods.subdomainOwner(subdomain, domain).call(
 				function(error, addr){
 				if(error){
 					console.log('[x] Error during execution', error);
