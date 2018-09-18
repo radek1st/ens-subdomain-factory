@@ -2,15 +2,15 @@ DApp = {
 	factoryContract: null,
 	factoryAbi: [{"constant":false,"inputs":[{"name":"_domain","type":"string"},{"name":"_subdomain","type":"string"},{"name":"_owner","type":"address"},{"name":"_target","type":"address"}],"name":"newSubdomain","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"subdomain","type":"string"}],"name":"SubdomainCreated","type":"event"},{"constant":true,"inputs":[{"name":"_subdomain","type":"string"},{"name":"_domain","type":"string"}],"name":"subdomainOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}],
 	emptyAddress: '0x0000000000000000000000000000000000000000',
-	
+
 	// Local
-	//factoryAddress: "0x9fbda871d559710256a2502a2517b794b482db40",
+	factoryAddress: "0x9fbda871d559710256a2502a2517b794b482db40",
 
 	// Ropsten
-	//factoryAddress: "0xf9fa2ff44a474b6d20500969bda61c2827fbc6b6",
-	
+	//factoryAddress: "",
+
 	// Mainnet
-	factoryAddress: "0xbd185de5172ca64eec3d8cc763883a68f9154cd6",
+	//factoryAddress: "",
 
 	init: function() {
 		console.log('[x] Initializing DApp.');
@@ -27,10 +27,10 @@ DApp = {
 						// Use injected provider
 						web3 = new Web3(ethereum);
 						console.log('[x] web3 object initialized.');
-						DApp.initContracts(); 
+						DApp.initContracts();
 					} else {
 						// No web3 instance available show a popup
-						$('#metamaskModal').modal('show');   
+						$('#metamaskModal').modal('show');
 					}
 				});
 				// Request provider
@@ -40,8 +40,8 @@ DApp = {
 			else {
 				web3 = new Web3(web3.currentProvider);
 				console.log('[x] web3 object initialized.');
-				DApp.initContracts(); 
-			} 
+				DApp.initContracts();
+			}
 		});
 	},
 
@@ -59,15 +59,15 @@ DApp = {
 			} else {
 				DApp.currentAccount = accounts[0];
 				console.log("[x] Using account", DApp.currentAccount);
-				
+
 				DApp.initActions();
 				DApp.initFrontend();
 			}
 		});
 	},
 
-	checkSubdomainOwner: function(subdomain, domain){
-		DApp.factoryContract.methods.subdomainOwner(subdomain, domain).call(
+	checkSubdomainOwner: function(subdomain, domain, topdomain){
+		DApp.factoryContract.methods.subdomainOwner(subdomain, domain, topdomain).call(
 				function(error, addr){
 				if(error){
 					console.log('[x] Error during execution', error);
@@ -87,9 +87,9 @@ DApp = {
 			})
 	},
 
-	newSubdomain: function(subdomain, domain, owner, target) {
+	newSubdomain: function(subdomain, domain, topdomain, owner, target) {
 		DApp.factoryContract.methods.newSubdomain(
-			subdomain, domain, owner, target).send(
+			subdomain, domain, topdomain, owner, target).send(
 			{
 				gas: 150000,
 				from: DApp.currentAccount
@@ -99,7 +99,7 @@ DApp = {
 					console.log('[x] Error during execution', error);
 				} else {
 					console.log('[x] Result', result);
-				}   
+				}
 			})
 	},
 
@@ -128,11 +128,12 @@ DApp = {
 			$("#targetHelp").remove();
 
 			let fullDomain = $('#subdomain').val() + "." +
-			$('#domain option').filter(":selected").val() + ".eth";
+				$('#domain option').filter(":selected").val() + "." +
+                $('#topdomain option').filter(":selected").val();
 			$("a").attr("href", "https://etherscan.io/enslookup?q=" + fullDomain);
 			$('#confirmModal').modal('show');
 			$("#subdomain").removeClass("is-valid is-invalid");
-			
+
 			DApp.newSubdomain(
 				$('#subdomain').val(),
 				$('#domain option').filter(":selected").val(),
@@ -153,7 +154,8 @@ DApp = {
 	initFrontend: function(){
 		$('#owner').val(DApp.currentAccount);
 		$('#target').val(DApp.currentAccount);
-		$("#domain").append("<option value='freedomain'>freedomain.eth</option>");
+		$("#domain").append("<option value='freedomain'>freedomain</option>");
+        $("#topdomain").append("<option value='eth'>eth</option>");
 	},
 
 	updateDomainAvailable: function(){
@@ -162,7 +164,7 @@ DApp = {
 		$('#subdomain').val(cleaned);
 		if($('#subdomain').val().length > 0) {
 			DApp.checkSubdomainOwner(
-				$('#subdomain').val(), 
+				$('#subdomain').val(),
 				$('#domain option').filter(":selected").val()
 				);
 		}
