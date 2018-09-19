@@ -42,11 +42,11 @@ contract('EnsSubdomainFactory', (accounts) => {
         await factory.newSubdomain(subdomain, domain, topdomain, subdomainOwner, subdomainTarget);
 
         //check registry
-        // assert(subdomainOwner == (await registry.owner.call(expectedNamehash)), "domain owner is invalid");
-        // assert(resolver.address == (await registry.resolvers.call(expectedNamehash)), "resolver is invalid");
-        //
-        // //check resolver
-        // assert(subdomainTarget == (await resolver.targets.call(expectedNamehash)), "domain target invalid");
+        assert(subdomainOwner == (await registry.owner.call(expectedNamehash)), "domain owner is invalid");
+        assert(resolver.address == (await registry.resolver.call(expectedNamehash)), "resolver is invalid");
+
+        //check target
+        assert(subdomainTarget == (await factory.subdomainTarget.call(subdomain, domain, topdomain)), "domain target invalid");
     });
 
     it("creating new subdomain fails when factory is not the owner of domain", async () => {
@@ -71,10 +71,10 @@ contract('EnsSubdomainFactory', (accounts) => {
 
         //check registry
         assert(subdomainTarget == (await registry.owner.call(expectedNamehash)), "domain owner is invalid");
-        assert(resolver.address == (await registry.resolvers.call(expectedNamehash)), "resolver is invalid");
+        assert(resolver.address == (await registry.resolver.call(expectedNamehash)), "resolver is invalid");
 
-        //check resolver
-        assert(subdomainOwner == (await resolver.targets.call(expectedNamehash)), "domain target invalid");
+        //check target
+        assert(subdomainOwner == (await factory.subdomainTarget.call(subdomain, domain, topdomain)), "domain target invalid");
     });
 
     it("creating new subdomain fails if it is already owned by someone else", async () => {
