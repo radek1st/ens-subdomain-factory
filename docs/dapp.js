@@ -10,7 +10,7 @@ DApp = {
 	factoryAddress: "0x128f9f878a5e1ba33cdcc3431c5b6068a0524071",
 
 	// Mainnet
-	//factoryAddress: "",
+	//factoryAddress: "0x111e97ad0a2762372c7fba98c9f7f4869d23b07d",
 
 	init: function() {
 		console.log('[x] Initializing DApp.');
