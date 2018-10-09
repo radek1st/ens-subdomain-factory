@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import './EnsRegistry.sol';
 import './EnsResolver.sol';
@@ -6,14 +6,14 @@ import './EnsResolver.sol';
 // ---------------------------------------------------------------------------------------------------
 // EnsSubdomainFactory - allows creating and configuring custom ENS subdomains with one contract call.
 //
-// (c) Radek Ostrowski / https://startonchain.com - MIT Licence.
+// @author Radek Ostrowski / https://startonchain.com - MIT Licence.
 // Source: https://github.com/radek1st/ens-subdomain-factory
 // ---------------------------------------------------------------------------------------------------
 
 /**
  * @title EnsSubdomainFactory
- * @dev Allows to create and configure a first level subdomain for Ethereum ENS in one call.
- * After deploying this contract, change the owner of the top level domain you want to use
+ * @dev Allows to create and configure a subdomain for Ethereum ENS in one call.
+ * After deploying this contract, change the owner of the domain you want to use
  * to this deployed contract address. For example, transfer the ownership of "startonchain.eth"
  * so anyone can create subdomains like "radek.startonchain.eth".
  */
@@ -22,13 +22,13 @@ contract EnsSubdomainFactory {
 	EnsRegistry public registry;
 	EnsResolver public resolver;
 	bool public locked;
-	bytes32 ethNameHash = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+  bytes32 emptyNamehash = 0x00;
 
-	event SubdomainCreated(address indexed creator, address indexed owner, string subdomain, string domain);
+	event SubdomainCreated(address indexed creator, address indexed owner, string subdomain, string domain, string topdomain);
 	event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 	event RegistryUpdated(address indexed previousRegistry, address indexed newRegistry);
 	event ResolverUpdated(address indexed previousResolver, address indexed newResolver);
-	event TopLevelDomainTransfersLocked();
+	event DomainTransfersLocked();
 
 	constructor(EnsRegistry _registry, EnsResolver _resolver) public {
 		owner = msg.sender;
@@ -47,63 +47,84 @@ contract EnsSubdomainFactory {
 	}
 
 	/**
-	 * @dev Allows to create a subdomain (e.g. "radek.startonchain.eth"), 
+	 * @dev Allows to create a subdomain (e.g. "radek.startonchain.eth"),
 	 * set its resolver and set its target address
-	 * @param _subDomain - sub domain name only e.g. "radek"
-	 * @param _topLevelDomain - parent domain name e.g. "startonchain"
+	 * @param _subdomain - sub domain name only e.g. "radek"
+	 * @param _domain - domain name e.g. "startonchain"
+	 * @param _topdomain - parent domain name e.g. "eth", "xyz"
 	 * @param _owner - address that will become owner of this new subdomain
 	 * @param _target - address that this new domain will resolve to
 	 */
-	function newSubdomain(string _subDomain, string _topLevelDomain, address _owner, address _target) public {
-		//create namehash for the top domain
-		bytes32 topLevelNamehash = keccak256(abi.encodePacked(ethNameHash, keccak256(abi.encodePacked(_topLevelDomain))));
-		//make sure this contract owns the top level domain
-		require(registry.owner(topLevelNamehash) == address(this), "this contract should own top level domain");
+	function newSubdomain(string _subdomain, string _domain, string _topdomain, address _owner, address _target) public {
+		//create namehash for the topdomain
+		bytes32 topdomainNamehash = keccak256(abi.encodePacked(emptyNamehash, keccak256(abi.encodePacked(_topdomain))));
+		//create namehash for the domain
+		bytes32 domainNamehash = keccak256(abi.encodePacked(topdomainNamehash, keccak256(abi.encodePacked(_domain))));
+		//make sure this contract owns the domain
+		require(registry.owner(domainNamehash) == address(this), "this contract should own the domain");
 		//create labelhash for the sub domain
-		bytes32 subDomainLabelhash = keccak256(abi.encodePacked(_subDomain));
+		bytes32 subdomainLabelhash = keccak256(abi.encodePacked(_subdomain));
 		//create namehash for the sub domain
-		bytes32 subDomainNamehash = keccak256(abi.encodePacked(topLevelNamehash, subDomainLabelhash));
+		bytes32 subdomainNamehash = keccak256(abi.encodePacked(domainNamehash, subdomainLabelhash));
 		//make sure it is free or owned by the sender
-		require(registry.owner(subDomainNamehash) == address(0) ||
-			registry.owner(subDomainNamehash) == msg.sender, "sub domain already owned");
+		require(registry.owner(subdomainNamehash) == address(0) ||
+			registry.owner(subdomainNamehash) == msg.sender, "sub domain already owned");
 		//create new subdomain, temporarily this smartcontract is the owner
-		registry.setSubnodeOwner(topLevelNamehash, subDomainLabelhash, address(this));
+		registry.setSubnodeOwner(domainNamehash, subdomainLabelhash, address(this));
 		//set public resolver for this domain
-		registry.setResolver(subDomainNamehash, resolver);
+		registry.setResolver(subdomainNamehash, resolver);
 		//set the destination address
-		resolver.setAddr(subDomainNamehash, _target);
+		resolver.setAddr(subdomainNamehash, _target);
 		//change the ownership back to requested owner
-		registry.setOwner(subDomainNamehash, _owner);
-		
-		emit SubdomainCreated(msg.sender, _owner, _subDomain, _topLevelDomain);
+		registry.setOwner(subdomainNamehash, _owner);
+
+		emit SubdomainCreated(msg.sender, _owner, _subdomain, _domain, _topdomain);
 	}
 
 	/**
-	 * @dev Returns the owner of top level domain (e.g. "startonchain.eth"), 
-	 * @param _topLevelDomain - domain name e.g. "startonchain"
+	 * @dev Returns the owner of a domain (e.g. "startonchain.eth"),
+	 * @param _domain - domain name e.g. "startonchain"
+	 * @param _topdomain - parent domain name e.g. "eth" or "xyz"
 	 */
-	function topLevelDomainOwner(string _topLevelDomain) public view returns(address) {
-		bytes32 namehash = keccak256(abi.encodePacked(ethNameHash, keccak256(abi.encodePacked(_topLevelDomain))));
+	function domainOwner(string _domain, string _topdomain) public view returns (address) {
+		bytes32 topdomainNamehash = keccak256(abi.encodePacked(emptyNamehash, keccak256(abi.encodePacked(_topdomain))));
+		bytes32 namehash = keccak256(abi.encodePacked(topdomainNamehash, keccak256(abi.encodePacked(_domain))));
 		return registry.owner(namehash);
 	}
-	
+
 	/**
-	 * @dev Return the owner of a subdomain (e.g. "radek.startonchain.eth"), 
-	 * @param _subDomain - sub domain name only e.g. "radek"
-	 * @param _topLevelDomain - parent domain name e.g. "startonchain"
+	 * @dev Return the owner of a subdomain (e.g. "radek.startonchain.eth"),
+	 * @param _subdomain - sub domain name only e.g. "radek"
+	 * @param _domain - parent domain name e.g. "startonchain"
+	 * @param _topdomain - parent domain name e.g. "eth", "xyz"
 	 */
-	function subDomainOwner(string _subDomain, string _topLevelDomain) public view returns(address) {
-		bytes32 topLevelNamehash = keccak256(abi.encodePacked(ethNameHash, keccak256(abi.encodePacked(_topLevelDomain))));
-		bytes32 subDomainNamehash = keccak256(abi.encodePacked(topLevelNamehash, keccak256(abi.encodePacked(_subDomain))));
-		return registry.owner(subDomainNamehash);
+	function subdomainOwner(string _subdomain, string _domain, string _topdomain) public view returns (address) {
+		bytes32 topdomainNamehash = keccak256(abi.encodePacked(emptyNamehash, keccak256(abi.encodePacked(_topdomain))));
+		bytes32 domainNamehash = keccak256(abi.encodePacked(topdomainNamehash, keccak256(abi.encodePacked(_domain))));
+		bytes32 subdomainNamehash = keccak256(abi.encodePacked(domainNamehash, keccak256(abi.encodePacked(_subdomain))));
+		return registry.owner(subdomainNamehash);
 	}
+
+    /**
+    * @dev Return the target address where the subdomain is pointing to (e.g. "0x12345..."),
+    * @param _subdomain - sub domain name only e.g. "radek"
+    * @param _domain - parent domain name e.g. "startonchain"
+    * @param _topdomain - parent domain name e.g. "eth", "xyz"
+    */
+    function subdomainTarget(string _subdomain, string _domain, string _topdomain) public view returns (address) {
+        bytes32 topdomainNamehash = keccak256(abi.encodePacked(emptyNamehash, keccak256(abi.encodePacked(_topdomain))));
+        bytes32 domainNamehash = keccak256(abi.encodePacked(topdomainNamehash, keccak256(abi.encodePacked(_domain))));
+        bytes32 subdomainNamehash = keccak256(abi.encodePacked(domainNamehash, keccak256(abi.encodePacked(_subdomain))));
+        address currentResolver = registry.resolver(subdomainNamehash);
+        return EnsResolver(currentResolver).addr(subdomainNamehash);
+    }
 
 	/**
 	 * @dev The contract owner can take away the ownership of any domain owned by this contract.
 	 * @param _node - namehash of the domain
 	 * @param _owner - new owner for the domain
 	 */
-	function transferTopLevelDomainOwnership(bytes32 _node, address _owner) public onlyOwner {
+	function transferDomainOwnership(bytes32 _node, address _owner) public onlyOwner {
 		require(!locked);
 		registry.setOwner(_node, _owner);
 	}
@@ -111,10 +132,10 @@ contract EnsSubdomainFactory {
 	/**
 	 * @dev The contract owner can lock and prevent any future domain ownership transfers.
 	 */
-	function lockTopLevelDomainOwnershipTransfers() public onlyOwner {
+	function lockDomainOwnershipTransfers() public onlyOwner {
 		require(!locked);
 		locked = true;
-		emit TopLevelDomainTransfersLocked();
+		emit DomainTransfersLocked();
 	}
 
 	/**

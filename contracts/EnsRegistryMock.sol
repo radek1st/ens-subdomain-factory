@@ -1,10 +1,10 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import './EnsRegistry.sol';
 
 /**
-* @title EnsRegistryMock
-*/
+ * @title EnsRegistryMock
+ */
 contract EnsRegistryMock is EnsRegistry {
 	mapping(bytes32 => address) owners;
 	mapping(bytes32 => address) public resolvers;
@@ -23,5 +23,9 @@ contract EnsRegistryMock is EnsRegistry {
 
 	function owner(bytes32 _node) public view returns (address){
 		return owners[_node];
+	}
+
+	function resolver(bytes32 _node) public view returns (address){
+		return resolvers[_node];
 	}
 }

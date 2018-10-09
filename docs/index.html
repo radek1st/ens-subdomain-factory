@@ -25,24 +25,46 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://www.toptal.com/ethereum/ethereum-name-service-dapp-tutorial#distinguish-only-choice-engineers">About the project</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://github.com/radek1st/ens-subdomain-factory">Source code</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://etherscan.io/address/0xbd185de5172ca64eec3d8cc763883a68f9154cd6#code">Contract address</a>
+          </li>
+        </ul>
+      </div>
     </nav>
 
     <br/>
     <div class="jumbotron">
+      <p class="lead">This simple Ethereum ĐApp lets you create (or update) a free <b>.eth</b> subdomain. You can learn how it is built <a target="_blank" href="https://www.toptal.com/ethereum/ethereum-name-service-dapp-tutorial#distinguish-only-choice-engineers">here</a>.</p>
+      <hr class="my-4">
       <form id="subdomain-form">
         <div class="row">
-          <div class="col form-group col-sm-3">
-            <label for="subdomain">Subdomain To Create/Update:</label>
+          <div class="col form-group">
+            <label for="subdomain">Subdomain to Create/Update:</label>
             <input id="subdomain" type="text" required class="form-control" placeholder="satoshi">
             <div class="valid-feedback"><span id="valid"></span></div>
             <div class="invalid-feedback"><span id="invalid"></span></div>
           </div>
-          <div class="col form-group col-sm-3">
-            <label for="domain">Choose Top Level Domain:</label>
+          <div class="col form-group">
+            <label for="domain">Choose a Domain:</label>
             <select class="form-control" id="domain">
             </select>
-          </div>                
-          <div class="col form-group col-sm-6">
+          </div>
+          <div class="col form-group">
+            <label for="topdomain">Choose a Topdomain:</label>
+            <select class="form-control" id="topdomain">
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col form-group">
             <label for="owner">Set Subdomain Owner:</label>
             <input id="owner" type="text" required class="form-control" placeholder="Owner Ethereum Address">
             <small id="ownerHelp" class="form-text text-muted">Using your current address by default</small>
@@ -82,7 +104,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>If you are using this ĐApp from a regular browser please install 
+          <p>If you are using this ĐApp from a regular browser please install
             <a href="https://metamask.io">MetaMask</a> first.</p>
           </div>
           <div class="modal-footer">
