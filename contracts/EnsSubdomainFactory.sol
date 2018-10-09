@@ -22,7 +22,7 @@ contract EnsSubdomainFactory {
 	EnsRegistry public registry;
 	EnsResolver public resolver;
 	bool public locked;
-    bytes32 emptyNamehash = 0x00;
+  bytes32 emptyNamehash = 0x00;
 
 	event SubdomainCreated(address indexed creator, address indexed owner, string subdomain, string domain, string topdomain);
 	event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);

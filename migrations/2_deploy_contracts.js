@@ -22,7 +22,7 @@ module.exports = async function(deployer, network, accounts) {
 					.then(function(factoryInstance){
 						//create two top level domains
 						registryInstance.setOwner(
-							Namehash.hash("startonchain.eth"),
+							Namehash.hash("tenz-id.eth"),
 							factoryInstance.address
 						);
 						registryInstance.setOwner(
