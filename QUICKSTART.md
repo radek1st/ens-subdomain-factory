@@ -9,13 +9,13 @@ As a developer you can interact with the smart contract directly. It is deployed
 
 https://etherscan.io/address/0xe47405af3c470e91a02bfc46921c3632776f9c6b#code
 
-Currently it supports two domains: `tenzorum-id.eth` and `tenz-id.xyz` and you can
+Currently, it supports two domains: `tenzorum-id.eth` and `tenz-id.xyz` and you can
 use either.
 
 Etherscan, MetaMask, MyCrypto and MyEtherWallet support TENZ-ID resolution. 
 Here's an example of it looks on Etherscan for `radek.tenzorum-id.eth`
 
-[img/mainnet-etherscan.png]
+![Etherscan TENZ-ID Resolution](https://github.com/radek1st/ens-subdomain-factory/blob/master/img/mainnet-etherscan.png)
 
 ## Rinkeby Testnet
 
@@ -26,10 +26,10 @@ have a custom domain please contact radek@tenzorum.org for one.
 
 Here's a screenshot of how to create one using [Remix](https://remix.ethereum.org):
 
-[img/create-tenz-id.png]
+![Remix Create TENZ-ID](https://github.com/radek1st/ens-subdomain-factory/blob/master/img/create-tenz-id.png)
 
-And here's how it resolves:
+And here's how it resolves both Owner and Target:
 
-[img/resolve-tenz-id.png]
+![Remix Resolve TENZ-ID Owner and Target](https://github.com/radek1st/ens-subdomain-factory/blob/master/img/resolve-tenz-id.png)
 
 
