@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Free ENS Subdomains ĐApp</title>
+  <title>Tenzorum</title>
 
   <!-- Libraries -->
   <link rel="stylesheet" href="lib/bootstrap-superhero.css">
@@ -19,7 +19,9 @@
   <br/>
   <div id="dapp" class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a class="navbar-brand" href="#">FREE ENS SUBDOMAINS ĐAPP</a>
+      <a class="navbar-brand" href="https://tenzorum.org">
+        <img src="https://tenzorum.org/wp-content/uploads/2018/03/Tenzorum_header_logo.png"/>
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -39,7 +41,6 @@
     </nav>
 
     <br/>
-
     <div class="jumbotron">
       <p class="lead">This simple Ethereum ĐApp lets you create (or update) a free <b>.eth</b> subdomain. You can learn how it is built <a target="_blank" href="https://www.toptal.com/ethereum/ethereum-name-service-dapp-tutorial#distinguish-only-choice-engineers">here</a>.</p>
       <hr class="my-4">
@@ -55,7 +56,12 @@
             <label for="domain">Choose a Domain:</label>
             <select class="form-control" id="domain">
             </select>
-          </div>                
+          </div>
+          <div class="col form-group">
+            <label for="topdomain">Choose a Topdomain:</label>
+            <select class="form-control" id="topdomain">
+            </select>
+          </div>
         </div>
         <div class="row">
           <div class="col form-group">
@@ -64,12 +70,6 @@
             <small id="ownerHelp" class="form-text text-muted">Using your current address by default</small>
             <div class="invalid-feedback">This Ethereum address is invalid</div>
 
-          </div>
-          <div class="col form-group">
-            <label for="target">Set Target Address:</label>
-            <input id="target" type="text" required class="form-control" placeholder="Target Ethereum Address">
-            <small id="targetHelp" class="form-text text-muted">Using your current address by default</small>
-            <div class="invalid-feedback">This Ethereum address is invalid</div>
           </div>
         </div>
 
@@ -80,15 +80,10 @@
 
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" target="_blank" href="https://www.linkedin.com/in/radekostrowski">Radek Ostrowski</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
       <div class="collapse navbar-collapse" id="navbarColor03">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" target="_blank" href="https://startonchain.com">Start On Chain 2018 MIT License</a>
+            <a class="nav-link" target="_blank" href="https://github.com/radek1st/ens-subdomain-factory">Radek Ostrowski</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" target="_blank" href="http://thomaspark.co">Bootstrap template by Thomas Park</a>
@@ -109,7 +104,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>If you are using this ĐApp from a regular browser please install 
+          <p>If you are using this ĐApp from a regular browser please install
             <a href="https://metamask.io">MetaMask</a> first.</p>
           </div>
           <div class="modal-footer">

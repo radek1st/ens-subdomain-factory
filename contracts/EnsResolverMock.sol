@@ -1,14 +1,18 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import './EnsResolver.sol';
 
 /**
-* @title EnsResolverMock
-*/
+ * @title EnsResolverMock
+ */
 contract EnsResolverMock is EnsResolver {
 	mapping(bytes32 => address) public targets;
 
 	function setAddr(bytes32 _node, address _addr) public {
 		targets[_node] = _addr;
+	}
+
+	function addr(bytes32 _node) public view returns (address) {
+		return targets[_node];
 	}
 }
